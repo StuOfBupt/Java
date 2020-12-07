@@ -112,3 +112,131 @@ abstract class A{
 - BIO（Block IO）：同步阻塞式IO，简单方便但是并发能力低
 - NIO（Non IO）：同步非阻塞式IO，客户端与服务端通过通道（channel）通信，实现多路复用
 - AIO（Asynchronous IO）：异步非阻塞IO，实现机制基于事件和回调机制
+
+##### 9、反射
+
+- 反射是指程序可以在运行时分析任意的对象，访问、检测和修改它本身状态或行为的一种能力，特别是针对泛型类型。
+
+- 反射机制提供了以下功能：
+
+  - 在运行时判断任意一个对象的类型
+  - 在运行时构造任意一个类对象
+  - 在运行时判断任意一个类所具有的成员变量和方法
+  - 在运行时调用任意一个对象的方法
+
+- Class反射API
+
+  - Class.forName()
+
+    ```java
+    String name = "java.util.Collections";
+    Class<?> cl = Class.forName(name);
+    ```
+
+  - 获取泛型类型变量
+
+    ```java
+    TypeVariable[] getTypeParameters();
+    ```
+
+    
+
+  - 获取当前类的超类，若当前类为Object，返回null
+
+    ```java
+    Type getGenericSuperclass();
+    ```
+
+    
+
+  - 获取当前类的接口的泛型类型
+
+    ```java
+    Type[] getGenericInterfaces();
+    ```
+
+    
+
+  - 获取方法
+
+    ```java
+    Method[] getDeclaredMethods()
+    ```
+
+    
+
+  - 
+
+- Method反射API
+
+  - 获取泛型返回值
+
+    ```java
+    Type getGenericReturnType();
+    ```
+
+    
+
+  - 获取泛型参数类型
+
+    ```java
+    Type[] getGenericParameterTypes();
+    ```
+
+    
+
+  - 获取方法的修饰符
+
+    ```java
+    Modifier[] getModifiers();
+    ```
+
+    
+
+  - 
+
+  
+
+##### 8、Java访问修饰符
+
+- private：仅针对本类可见
+- public：所有类可见
+- protected：对本包和所有子类可见
+- 默认（不加修饰符）：对本包可见
+
+##### 9、克隆
+
+- Object.clone（）
+
+  - **Object中的clone方法是protected的，只有子类才能访问，因此无法直接调用anObject.clone()，必须重新定义clone为public才能允许所有方法克隆对象**【即便默认的clone能够满足需求，也需要重新定义clone，将其访问修饰符定义为public以便其他对象能够调用clone方法】
+
+    ```java
+    @override
+    public T clone() throw CloneNotSupportedException{
+      	return (T)super.clone();
+    }
+    ```
+
+    
+
+  - 该方法中只是对逐个域进行拷贝，因为它对这个对象一无所知
+
+- Cloneable接口
+
+  - 该接口是个**标记接口**（不包含任何方法，唯一的作用就是可以进行类型检查 obj instanceof Cloneable），他并没有指定clone方法，该方法是从Object继承而来，这个接口**只是作为一个标记**，指示类的设计者了解克隆过程。
+  - 如果对象进行clone调用，但是没有实现这个接口，则会生成受查异常
+
+- 实现深拷贝的一个例子
+
+  ```java
+  class Employee implements Cloneable{
+    ...	
+    public Employee clone() throw CloneNotSupportedException{
+      Employee cloned = (Employee)super.clone();
+      cloned.hireDay = (Date).hireDay.clone();
+      return cloned;
+  	}
+  }
+  ```
+
+  
